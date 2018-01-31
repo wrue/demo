@@ -103,3 +103,4 @@ def decode_all_data(requestHandler):
     msgPack = msg.SerializeToString()
     pbLenPack = struct.pack('I',socket.htonl(len(msgPack)))
     return signaturePack + pbLenPack + versionPack + msgTypePack + msgPack
+
