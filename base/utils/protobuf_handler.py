@@ -26,3 +26,18 @@ MessageDict = {
 HandleDict = {
     mgntDes.MSG_EXEC_CMD: 'exec_cmd',
 }
+
+def get_message_class(msgType):
+    if msgType in MessageDict.keys():
+        return MessageDict[msgType]() #TODO modify as MessageDict.get(msgType)
+    else:
+        logger.error("msgType:%s not exist in MessageDict" % msgType)
+        return None
+
+
+def get_message_handle(msgType):
+    if msgType in HandleDict.keys():
+        return HandleDict[msgType]
+    else:
+        logger.error("msgType:%s not exist in HandleDict" % msgType)
+        return None
