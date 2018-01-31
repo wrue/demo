@@ -88,3 +88,18 @@ def decode_all_data(requestHandler):
         except Exception, err:
             logger.error("decode_all_data err %s" % traceback.format_exc(err))
             return None
+
+ def encode(msgType, msg):
+    '''
+      Encode message object into string which use well-defined protocol
+
+    :param msgType: message-Type
+    :param msg: message object
+    :return: string
+    '''
+    signaturePack = struct.pack('I',socket.htonl(AgentChannelProto.SIGNATURE))
+    versionPack = struct.pack('H',socket.htons(AgentChannelProto.VERSION))
+    msgTypePack = struct.pack('H',socket.htons(msgType))
+    msgPack = msg.SerializeToString()
+    pbLenPack = struct.pack('I',socket.htonl(len(msgPack)))
+    return signaturePack + pbLenPack + versionPack + msgTypePack + msgPack
