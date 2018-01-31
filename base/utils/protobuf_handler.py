@@ -1,20 +1,28 @@
-import abc
-import six
-import os
-import SocketServer
+import struct
+import socket
+import traceback
+import google.protobuf.message as pbmsg
+import descriptor_local as mgntDes
 from base import log
-import base.utils.protobuf_handle as protobuf_handle
 
 logger = log.get_logger()
-HA_LEASE_TIMEOUT = None
 
 
-@six.add_metaclass(abc.ABCMeta)
-class ServerHandler(SocketServer.BaseRequestHandler, object):
-    def handle(self):
-        try:
-            req_handler = RequestHandler(self.request, self.client_address, self.server)
-            req_handler.handle()
-        except Exception,e:
-            logger.error("AgentHandler handle catch exception:%s" % e.message)
-            logger.exception(str(e))
+class AgentChannelProto(object):
+    SIGNATURE = 0x5aa5ff00
+    VERSION = 1
+    MIN_LENGTH = 12
+    MAX_LENGTH = 64 * 1024
+    HA_MSG_TYPE_MIN = 301
+    HA_MSG_TYPE_MAX = 400
+    DB_MANAGE_TYPE_MAX = 2000
+
+
+MessageDict = {
+    mgntDes.MSG_RPC_RESPONSE: mgntDes.RpcResponse,
+    mgntDes.MSG_EXEC_CMD: mgntDes.ExecCmdReq,
+}
+
+HandleDict = {
+    mgntDes.MSG_EXEC_CMD: 'exec_cmd',
+}
