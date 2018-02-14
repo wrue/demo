@@ -1,0 +1,34 @@
+syntax = "proto3";
+option java_package = "com.demo.channel.proto";
+
+
+enum MessageType
+{
+    MSG_UNKNOWN          = 0;
+    MSG_RPC_RESPONSE 		 = 90;
+    MSG_EXEC_CMD		     = 1001;
+};
+
+message RpcResponse
+{
+    enum State {
+        RUNNING  					= 0;
+        FINISHED  				= 1;
+        ERROR  						= 2;
+    }
+
+    string requestId 			= 1;
+    State state						= 2;
+    string result 				= 3;
+    uint32 errorCode 			= 4;
+    string errorMsg 			= 5;
+};
+
+message ExecReq
+{
+  string requestId 				= 1;
+	string userName				  = 2;
+	string passWord					= 3;
+  string scriptPath				= 4;
+  string param					  = 5;
+};
